@@ -84,24 +84,23 @@
     .style('stroke', 'transparent')
     .style('stroke-width', '0px')
 
-  svg.on('click', (event) => {
-    const offset = ((event.offsetY - 90) / height) * 100 + '%'
-    bottom.attr('offset', offset)
-    top.attr('offset', offset)
-    const cursor = d3.pointer(event)
-
+  const setSpot = (cursor, showYou) => {
     if (spot) {
       spot.attr('cx', cursor[0]).attr('cy', cursor[1])
-      you.attr('x', cursor[0] - 60).attr('y', cursor[1])
       return
     }
-    you = svg
-      .append('text')
-      .text('you →')
-      .attr('x', cursor[0] - 60)
-      .attr('y', cursor[1])
-      .attr('dy', '0.4em')
-      .style('font-size', '0.8em')
+    if (showYou && you) {
+      you.attr('x', cursor[0] - 60).attr('y', cursor[1])
+    }
+    if (showYou && !you) {
+      you = svg
+        .append('text')
+        .text('you →')
+        .attr('x', cursor[0] - 60)
+        .attr('y', cursor[1])
+        .attr('dy', '0.4em')
+        .style('font-size', '0.8em')
+    }
 
     spot = svg
       .append('circle')
@@ -109,5 +108,26 @@
       .attr('cy', cursor[1])
       .attr('r', 10)
       .style('fill', 'red')
+  }
+
+  if (window.location.hash && window.location.hash.search('-') > -1) {
+    const cursor = window.location.hash
+      .replace('#', '')
+      .split('-')
+      .map((i) => parseInt(i, 10))
+    setSpot(cursor)
+    const offset = ((cursor[1] + 20) / height) * 100 + '%'
+    bottom.attr('offset', offset)
+    top.attr('offset', offset)
+  }
+
+  svg.on('click', (event) => {
+    const offset = ((event.offsetY - 90) / height) * 100 + '%'
+    bottom.attr('offset', offset)
+    top.attr('offset', offset)
+    const cursor = d3.pointer(event)
+    setSpot(cursor, true)
+
+    window.location.hash = `${Math.round(cursor[0])}-${Math.round(cursor[1])}`
   })
 })()
