@@ -1,0 +1,5 @@
+_site/
+public/
+node_modules/
+src/_data/guages.json
+.env

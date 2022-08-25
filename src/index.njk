@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <title>Where is So Cal?</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
+    <style>
+      {{style | safe}}
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>Where is So Cal?</h1>
+      <p>Based on research from <a href="https://web.stanford.edu/dept/linguistics/VoCal/dialectology.html">Stanford linguists</a>. Tap where you live in California to discover where Northern and Southern California are.</p>
+    </div>
+    <div id="map"></div>
+    <script>
+      window._california = {{california | json | safe}};
+      window._orangeCounty = {{orange | json | safe}};
+    </script>
+    <script src="js/d3.min.js"></script>
+    <script src="js/d3-geo.min.js"></script>
+    <script src="js/map.js"></script>
+  </body>
+</html>
