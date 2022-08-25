@@ -87,7 +87,13 @@
   const setSpot = (cursor, showYou) => {
     if (spot) {
       spot.attr('cx', cursor[0]).attr('cy', cursor[1])
-      return
+    } else {
+      spot = svg
+        .append('circle')
+        .attr('cx', cursor[0])
+        .attr('cy', cursor[1])
+        .attr('r', 10)
+        .style('fill', 'red')
     }
     if (showYou && you) {
       you.attr('x', cursor[0] - 60).attr('y', cursor[1])
@@ -101,13 +107,6 @@
         .attr('dy', '0.4em')
         .style('font-size', '0.8em')
     }
-
-    spot = svg
-      .append('circle')
-      .attr('cx', cursor[0])
-      .attr('cy', cursor[1])
-      .attr('r', 10)
-      .style('fill', 'red')
   }
 
   if (window.location.hash && window.location.hash.search('-') > -1) {
@@ -116,7 +115,7 @@
       .split('-')
       .map((i) => parseInt(i, 10))
     setSpot(cursor)
-    const offset = ((cursor[1] + 20) / height) * 100 + '%'
+    const offset = ((cursor[1] + 120) / height) * 100 + '%'
     bottom.attr('offset', offset)
     top.attr('offset', offset)
   }
