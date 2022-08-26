@@ -3,6 +3,7 @@
   const width = 600
   const height = 900
   const soCalColor = 'blue'
+  const mutedColor = 'grey'
 
   let spot = null
   let you = null
@@ -42,10 +43,10 @@
   const keySize = 25
   svg
     .append('rect')
-    .attr('width', `${keySize}px`)
-    .attr('height', `${keySize}px`)
-    .attr('x', `${width - keySize}px`)
-    .attr('y', `${keySize}px`)
+    .attr('width', keySize)
+    .attr('height', keySize)
+    .attr('x', width - keySize)
+    .attr('y', keySize + 100)
     .attr('fill', soCalColor)
     .style('stroke', '#000')
     .style('stroke-width', '3px')
@@ -53,8 +54,16 @@
   svg
     .append('text')
     .text('SoCal')
-    .attr('x', `${width - keySize * 4}px`)
-    .attr('y', keySize)
+    .attr('x', width - keySize * 4)
+    .attr('y', keySize + 100)
+    .attr('dy', '1em')
+    .style('font-size', '1em')
+
+  const instructions = svg
+    .append('text')
+    .text('Tap where you live')
+    .attr('x', width / 1.5)
+    .attr('y', height / 3)
     .attr('dy', '1em')
     .style('font-size', '1em')
 
@@ -65,22 +74,24 @@
     .attr('stop-color', soCalColor)
     .attr('stop-opacity', 1)
 
-  svg
+  const state = svg
     .selectAll('path')
+    .attr('class', 'california')
     .data(window._california.features)
     .join('path')
     .attr('d', geoGenerator)
-    .style('fill', 'url(#soCalGradient)')
+    .style('fill', mutedColor)
     .style('stroke', '#000')
     .style('stroke-width', '3px')
+    .style('cursor', 'pointer')
 
-  svg
+  const orangeCounty = svg
     .append('g')
     .selectAll('path')
     .data(window._orangeCounty.features)
     .join('path')
     .attr('d', geoGenerator)
-    .style('fill', soCalColor)
+    .style('fill', mutedColor)
     .style('stroke', 'transparent')
     .style('stroke-width', '0px')
 
@@ -109,24 +120,14 @@
     }
   }
 
-  if (window.location.hash && window.location.hash.search('-') > -1) {
-    const cursor = window.location.hash
-      .replace('#', '')
-      .split('-')
-      .map((i) => parseInt(i, 10))
-    setSpot(cursor)
-    const offset = ((cursor[1] + 120) / height) * 100 + '%'
-    bottom.attr('offset', offset)
-    top.attr('offset', offset)
-  }
-
   svg.on('click', (event) => {
+    instructions.remove()
+    state.style('fill', 'url(#soCalGradient)')
+    orangeCounty.style('fill', soCalColor)
     const offset = ((event.offsetY - 90) / height) * 100 + '%'
     bottom.attr('offset', offset)
     top.attr('offset', offset)
     const cursor = d3.pointer(event)
     setSpot(cursor, true)
-
-    window.location.hash = `${Math.round(cursor[0])}-${Math.round(cursor[1])}`
   })
 })()
